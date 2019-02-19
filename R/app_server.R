@@ -1,6 +1,8 @@
 #' @import shiny
 #' @importFrom pryr mem_used
 #' @importFrom prettyunits pretty_bytes
+#' @importFrom stats rnorm
+#' @importFrom utils capture.output memory.limit
 app_server <- function(input, output,session) {
   # List the first level callModules here
   
