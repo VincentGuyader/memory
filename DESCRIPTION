@@ -1,13 +1,15 @@
 Package: memory
-Title: An Amazing Shiny App
+Title: Crash test your RAM
 Version: 0.0.0.9000
 Authors@R: person("Vincent", "Guyader", email = "vincent@thinkr.fr", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: What license is it under?
+Description: Simple shiny app to test memory limit in production.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: 
     shiny,
     pryr,
-    nessy
+    nessy,
+    prettyunits
 RoxygenNote: 6.1.1
+Remotes: github::ColinFay/nessy

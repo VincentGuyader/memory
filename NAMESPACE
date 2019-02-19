@@ -3,6 +3,7 @@
 export(run_app)
 import(nessy)
 import(shiny)
+importFrom(prettyunits,pretty_bytes)
 importFrom(pryr,mem_used)
 importFrom(shiny,addResourcePath)
 importFrom(shiny,runApp)

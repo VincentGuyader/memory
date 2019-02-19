@@ -1,5 +1,6 @@
 #' @import shiny
 #' @importFrom pryr mem_used
+#' @importFrom prettyunits pretty_bytes
 app_server <- function(input, output,session) {
   # List the first level callModules here
   
@@ -7,7 +8,10 @@ app_server <- function(input, output,session) {
   
   output$dt <- renderTable({
     invalidateLater(1000, session)
-    data.frame(memory = capture.output(pryr::mem_used() ))
+    data.frame(memory = capture.output(pryr::mem_used() ),
+               memory.limit = prettyunits::pretty_bytes(memory.limit()*1000000)
+               
+               )
     
   })
   
