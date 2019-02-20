@@ -1,3 +1,4 @@
+^\./app\.R$
 ^readme-figs$
 ^README\.Rmd$
 ^.*\.Rproj$
