@@ -1,47 +1,43 @@
 #' @import shiny
 #' @importFrom pryr mem_used
-#' @importFrom prettyunits pretty_bytes
 #' @importFrom stats rnorm
-#' @importFrom utils capture.output memory.limit
+#' @importFrom utils capture.output
+#' @importFrom dplyr bind_rows
+#' 
 app_server <- function(input, output,session) {
 
   
-  memlimit <- function(){
-    
-    if (.Platform$OS.type == "windows") {
-     out <-  prettyunits::pretty_bytes(memory.limit()*1000000)
-    }else{
-     out <-   as.numeric(system("awk '/MemTotal/ {print $2}' /proc/meminfo",intern=TRUE))  *10000
-          }
-    out
-    
-  }
-  memfree <- function(){
-    
-    if (.Platform$OS.type == "windows") {
-     out <-  NA
-    }else{
-     out <-   as.numeric(system("awk '/MemFree/ {print $2}' /proc/meminfo",intern=TRUE))  *10000
-          }
-    out
-    
-  }
-  # memfree <- as.numeric(system("awk '/MemFree/ {print $2}' /proc/meminfo",intern=TRUE))  
-  
+  history <- reactiveValues(v=data.frame(time=as.POSIXct(numeric(0),origin=Sys.Date()),mem_used = numeric(0),stringsAsFactors = FALSE))
   
   data <- reactiveValues(e=NULL)
   
-  output$dt <- renderTable({
-    invalidateLater(1000, session)
-    data.frame(memory = capture.output(pryr::mem_used() )
-               ,
-               memory.free = memfree(),
-               memory.limit = memlimit()
-               
-               )
-    
+  used <-  reactive({
+    invalidateLater(1000)
+    pryr::mem_used() })
+  
+  observe({
+    history$v <- dplyr::bind_rows(isolate(history$v),
+              data.frame(time=Sys.time(),
+              mem_used = as.numeric(used()),
+              stringsAsFactors = FALSE)
+    )
   })
   
+  output$count <- renderText({
+    nrow(history$v)
+  })
+  output$dt <- renderTable({
+    data.frame(memory = capture.output(used()),
+               memory.free = memfree(),
+               memory.limit = memlimit()
+               )
+  })
+  
+  output$dessin <- renderPlot({
+    invalidateLater(input$range*1000)
+    # input$prout
+    isolate(mem_history(history$v))
+  })
   observeEvent(input$more,{
     message("more")
     message(capture.output(pryr::mem_used() ))

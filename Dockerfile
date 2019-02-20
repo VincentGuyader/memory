@@ -4,7 +4,6 @@ RUN R -e "pacman::p_load('remotes')"
 RUN R -e "pacman::p_load('prettyunits')"
 RUN R -e "pacman::p_load('pryr')"
 RUN R -e "pacman::p_load('shiny')"
-RUN R -e "pacman::p_load('shiny')"
 RUN R -e "remotes::install_github('vincentguyader/memory')"
 
 EXPOSE 3838
