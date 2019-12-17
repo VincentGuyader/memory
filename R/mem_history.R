@@ -28,21 +28,60 @@ nice_units <- function (x, digits = 3, ...)
 
 mem_history <- function(history){
   
-  base <- data.frame(time =   seq(from=min(history$time),to=max(history$time),by="1 sec")
-  )
-    history %>% 
-    full_join(base,by="time") %>% 
-    arrange(time) %>% 
-      mutate(mem_used = zoo::na.approx(mem_used)) %>% 
-    group_by(time=lubridate::round_date(time,"1 seconds")) %>% 
-    summarise(mem_used=mean(mem_used,na.rm=TRUE)) %>% 
-  ggplot() +
-  aes(x=time, y =mem_used) +
-  # geom_line(linetype = 2,size=1) + 
-  geom_point(shape=15, size = 3, stroke = 3) +
-  geom_area(fill=alpha('slateblue',0.2)) +
-  theme_classic()+
-  scale_y_continuous(labels =nice_units)+
-  theme(axis.line = 
-  element_line(linetype = "dashed"))
+  history <- history %>% 
+    mutate(
+    y = floor(mem_used/100000),
+    y2=lag(y)) %>% 
+    filter(y!=y2) %>% 
+    bind_rows(history %>% slice(n())) %>% 
+    select(time,  mem_used)
+  
+  
+ history2 <-  bind_rows(old = history, 
+            new = history %>% 
+              mutate(mem_used = lag(mem_used)),
+            .id = "source") %>%
+    arrange(time, source)
+  
+
+  # base <- data.frame(time =   seq(from=min(history$time),to=max(history$time),by="1 sec"))
+  #   history2 %>% 
+  #   # full_join(base,by="time") %>% 
+  #   # arrange(time) %>% 
+  #     # mutate(mem_used = zoo::na.approx(mem_used)) %>% 
+  #   group_by(time=lubridate::round_date(time,"1 seconds")) %>% 
+  #   summarise(mem_used=mean(mem_used,na.rm=TRUE)) %>% 
+  # ggplot() +
+  # aes(x=time, y =mem_used) +
+  # # geom_line(linetype = 2,size=1) + 
+  # # geom_point(shape=15, size = 3, stroke = 3) +
+  #   geom_step()+
+  # geom_area(fill=alpha('slateblue',0.2)) +
+  # theme_classic()+
+  # scale_y_continuous(labels =nice_units)+
+  # theme(axis.line = 
+  # element_line(linetype = "dashed"))
+ # save(history,history2,file="plop.Rdata")
+ # load("inst/app/plop.Rdata")
+ history %>% 
+ ggplot( ) + aes(time,mem_used) +
+   geom_ribbon(aes(x = time, ymin = 0, 
+                   ymax = mem_used), 
+               data = history2,
+               fill = alpha('slateblue',0.2))+
+   theme_classic()+
+   scale_y_continuous(labels =nice_units)+
+   theme(axis.line =
+   element_line(linetype = "dashed"))+
+   geom_step(
+     lty = 3,
+             shape=15, 
+     size = 4,
+     stroke = 1,
+     linemitre = 2
+     )
+ 
+ 
+ 
+ 
 }
