@@ -1,27 +1,24 @@
 Package: memory
 Title: Crash test your RAM
-Version: 0.0.0.9000
+Version: 0.1
 Authors@R: 
-    person(given = "Vincent",
-           family = "Guyader",
-           role = c("aut", "cre"),
-           email = "vincent@thinkr.fr")
-Description: Simple shiny app to test memory limit in
-    production.
-License: GPL-3
+    person("Vincent", "Guyader", , "vincent@thinkr.fr", role = c("aut", "cre"))
+Description: Simple shiny app to test memory limit in production.
+License: MIT + file LICENSE
 Imports: 
+    config,
     dplyr,
     ggplot2,
+    golem,
     lubridate,
     nessy,
-    prettyunits,
     pryr,
+    ps,
     shiny,
     stats,
-    utils,
-    zoo
+    utils
 Remotes: 
     github::ColinFay/nessy
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.3.2

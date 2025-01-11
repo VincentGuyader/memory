@@ -7,6 +7,7 @@ output: github_document
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  eval=FALSE,
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%"
@@ -33,4 +34,33 @@ memory::run_app()
 ```
 
 ![](readme-figs/demo.png)
+
+## usage from docker
+
+- from docker hub
+
+```{bash}
+docker run -p 80:3838 thinkr/memory
+```
+
+- (re)build localy
+
+```{r}
+golem::add_dockerfile_with_renv_shinyproxy(source_folder = "deploy")
+```
+
+```{bash}
+cd deploy
+docker build -f Dockerfile_base --progress=plain -t memory_base .
+docker build -f Dockerfile --progress=plain -t memory:latest .
+docker run -p 3838:3838 memory:latest
+# then go to 127.0.0.1:3838
+```
+
+
+## deploy to posit Connect
+
+```{r}
+rsconnect::deployApp(appFiles = "app.R")
+```
 

@@ -1,0 +1,4 @@
+docker build -f Dockerfile_base --progress=plain -t memory_base .
+docker build -f Dockerfile --progress=plain -t memory:latest .
+docker run -p 3838:3838 memory:latest
+# then go to 127.0.0.1:3838
